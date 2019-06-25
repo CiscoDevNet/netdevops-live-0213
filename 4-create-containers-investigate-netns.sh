@@ -9,20 +9,21 @@ sudo lsns --type=net
 echo "------------------"
 echo ""
 echo "Press enter to create two containers..."
-read -l
+read
 
 ## Create two containers
 ### By default ubuntu containers run bash CLI, we dont want these interactive
 ### Hence the /bin/sleep and &
 sudo docker run --name container1 ubuntu:latest /bin/sleep 1000000 &
 sudo docker run --name container2 ubuntu:latest /bin/sleep 1000000 &
+sleep 3
 
 # Output current network namespaces via lsns.
 echo "See lsns output below, notice the new namespaces for the two containers:"
 sudo lsns --type=net
 echo "------------------"
 echo "Press enter to continue..."
-read -l
+read 
 
 ## Install some cli tools (ip) into containers 1 and 2
 ## Obviously this wont survive if the container is stopped as it's not in the docker image.
@@ -33,7 +34,7 @@ sudo docker exec -ti container2 apt install -y iproute2
 
 echo "------------------"
 echo "Press enter to run 'ip addr list' and 'ip route list' within the containers..."
-read -l
+read 
 
 echo "Container1:"
 sudo docker exec -ti container1 ip addr list
@@ -49,12 +50,12 @@ echo "We can also use netns tools from the HOST to investigate and manipulate"
 echo "Interfaces, routes, etc within a namespace."
 echo ""
 echo "Press enter to see the same info, for container1 via the nsenter tool"
-read -l
+read 
 
 # First we need the PID of the docker container we want to "enter" the namespace of.
 # This is how the nsenter tool identifies which namespace we care about.
 # This is the same pid as ps aux would show for the docker command.
-CONTAINER1_PID=$(sudo lsns --type=net | grep docker | awk -F " " '{print $4}' | head -n 1 )
+export CONTAINER1_PID=$(sudo lsns --type=net | grep docker | awk -F " " '{print $4}' | tail -n 1  )
 
 # Prove this command above returns the same PID as we see for the container is ps aux
 sudo ps aux | grep $CONTAINER1_PID
