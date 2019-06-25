@@ -15,6 +15,6 @@ sudo ip link del brtest2
 sudo brctl delbr demobr1
 
 # Deletes docker containers
-for c in container1 container2 container3; do \
+for c in container1 container2 container3 container4; do \
  sudo docker kill ${c} ; sudo docker rm ${c} ; \
 done
