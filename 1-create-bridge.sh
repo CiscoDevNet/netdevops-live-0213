@@ -14,7 +14,7 @@ sudo brctl addbr demobr1
 sudo ip link set up demobr1
 
 # Give bridge a L3 interface
-sudo ip addr add 172.16.0.1/24 dev brtest1
+sudo ip addr add 172.16.0.1/24 dev demobr1
 
 # Add dummy interfaces to bridge and output.
 sudo brctl addif demobr1 brtest1 brtest2
