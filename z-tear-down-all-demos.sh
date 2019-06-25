@@ -13,3 +13,8 @@ sudo ip link del pair2-a type veth peer name pair2-b
 sudo ip link del brtest1
 sudo ip link del brtest2
 sudo brctl delbr demobr1
+
+# Deletes docker containers
+for c in container1 container2; do \
+ sudo docker kill ${c} ; sudo docker rm ${c} ; \
+done
