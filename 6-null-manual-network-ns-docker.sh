@@ -10,7 +10,7 @@ read
 
 ### By default ubuntu containers run bash CLI, we dont want these interactive
 ### Hence the /bin/sleep and &
-sudo docker run --name container4 --network=null ubuntu:latest /bin/sleep 1000000 &
+sudo docker run --name container4 --network=none ubuntu:latest /bin/sleep 1000000 &
 sleep 3
 
 # Output current network namespaces via lsns.
@@ -66,6 +66,7 @@ echo "------------------"
 echo "Press enter to manually address the container's manual-b interface"
 read
 
+sudo ip netns exec container4 ip link set up manual-b
 sudo ip netns exec container4 ip addr add 172.17.0.100/16 dev manual-b
 sudo ip netns exec container4 ip route add default via 172.17.0.1
 
@@ -75,7 +76,8 @@ echo "Press enter test connectivity by trying to install ping and then pinging 8
 echo ""
 read
 
-sudo docker exec -ti container4 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 sudo docker exec -ti container4 apt update
 sudo docker exec -ti container4 apt install -y iproute2 iputils-ping
-sudo docker exec -ti container4 ping -c 5 8.8.8.8
+sudo docker exec -ti container4 ping -c 3 8.8.8.8
+sudo docker exec -ti container4 ip addr list
+sudo docker exec -ti container4 ip route list
